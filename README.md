@@ -6,14 +6,20 @@ A responsive web-based trading bot that analyzes Forex market data in real-time 
 
 
 Key Features:
+
+
 📊 Real-time Market Data via Finnhub API
+
+
 📈 Technical Indicators (RSI, EMA, MACD)
+
 🔔 Automated Signal Generation
+
 📱 Telegram Notifications
-📅 Signal History Tracking
-🌐 Responsive Design (mobile & desktop)
+
+📅 Signal History Tracking desktop)
 
 
-additionally it features two options;
+Additionally it features two options;
 
 Esteem 1.o and Esteem 2.0 the upgraded version
