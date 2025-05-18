@@ -1,0 +1,87 @@
+✨📊Trading Bot & Journal ✨📊
+
+Your Fun, Interactive Trading Companion
+🚀 Welcome, Trader!
+This Trading Bot & Journal helps you track your Pocket Option trades, analyze performance, and improve your strategy—all in one colorful, interactive dashboard!
+
+🔥 Key Features
+✅ Real-time Trade Tracking
+✅ Win/Loss Analytics
+✅ Profit/Loss Charts
+✅ Local Storage (No login needed!)
+✅ Mobile-Friendly
+
+🎮 How to Use It?
+1️⃣ Adding a New Trade
+📌 Step 1: Fill in the trade details:
+
+Currency Pair (EUR/USD, GBP/USD, etc.)
+
+Direction (BUY or SELL)
+
+Result (Win 🎉 or Loss 😢)
+
+Profit/Loss Amount
+
+📌 Step 2: Hit "Save Trade" 💾
+
+✨ What Happens?
+
+Your trade gets saved automatically!
+
+The chart updates instantly.
+
+A fun notification pops up!
+
+2️⃣ Viewing Your Trade History
+📌 Your trades appear in a neat list:
+
+Green = Win 🟢
+
+Red = Loss 🔴
+
+Profit/Loss displayed clearly
+
+📌 Want to delete everything?
+
+Click "Clear All" (But be careful! 🚨)
+
+3️⃣ Analyzing Performance
+📊 The Performance Chart shows:
+
+Total Wins vs. Losses
+
+Visual trends (Are you improving?)
+
+💡 Pro Tip: The more trades you log, the better insights you get!
+
+🛠 Tech Stuff (For Nerds 🤓)
+🔹 Built With: HTML, CSS, JavaScript
+🔹 Charts Powered By: Chart.js
+🔹 Data Storage: localStorage (No server needed!)
+
+🎨 Why You’ll Love This
+✔ No setup required—just open and use!
+✔ Works offline (Trades save in your browser)
+✔ Clean, colorful design (No boring spreadsheets!)
+
+🚨 Troubleshooting
+❌ Not saving trades?
+
+Check if all fields are filled.
+
+Try refreshing the page.
+
+❌ Chart not updating?
+
+Make sure you’ve added at least one trade.
+
+🎉 Ready to Boost Your Trading?
+👉 Click Here to Start Tracking! (Demo link coming soon!)
+
+💬 Feedback? Suggestions?
+Let me know! I’d love to make this even better for you. 🚀
+
+Happy Trading! 💰📈
+
+🔹 Made with ❤️ for traders by [Aldane Hutchinson]

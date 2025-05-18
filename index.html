@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Esteem-2.0</title>
+    <link rel="stylesheet" href="css/esteem-2.0.css">
+    <link rel="stylesheet" href="css/footer-v-2.0.css">
+    <link rel="shortcut icon" href="./images/asset/Create a anime profile picture male black.jpg" type="image/x-icon">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+</head>
+<body>
+
+  <!-- Top Navbar for Desktop -->
+<nav class="navbar">
+  <div class="nav-logo">Esteem Signal 2.0</div>
+  <ul class="nav-links">
+  <li><a href="index.html"><i data-lucide="home"></i> Esteem-2.0</a></li>
+  <li><a href="Esteem-1.0.html"><i data-lucide="activity"></i> Esteem-1.0</a></li>
+  <li><a href="journal.html"><i data-lucide="book-open-text"></i> Trade Journal</a></li>
+  <li><a href="about.html"><i data-lucide="info"></i> About</a></li>
+</ul>
+
+  <div class="mobile-toggle" id="menu-toggle">&#9776;</div>
+</nav>
+
+<!-- Sidebar for Mobile -->
+<div class="sidebar" id="mobile-menu">
+  <ul>
+  <li><a href="index.html"><i data-lucide="home"></i> Esteem-2.0</a></li>
+  <li><a href="Esteem-1.0.html"><i data-lucide="activity"></i>Esteem-1.0</a></li>
+  <li><a href="journal.html"><i data-lucide="book-open-text"></i> Trade Journal</a></li>
+  <li><a href="about.html"><i data-lucide="info"></i> About</a></li>
+  <li><button id="close-sidebar"><i data-lucide="x"></i> Close</button></li>
+</ul>
+
+</div>
+
+
+
+
+
+    <div class="container">
+        <h1>Esteem signal 2.0</h1>
+        <div class="theme-toggle">
+  <label class="switch">
+    <input type="checkbox" id="theme-switch">
+    <span class="slider"></span>
+  </label>
+  <span id="theme-label">Light Mode</span>
+</div>
+
+
+<div id="loading-screen">
+  <div class="loader">
+    <div class="glow-circle"></div>
+    <div class="loader-text">Loading...</div>
+  </div>
+</div>
+
+
+        
+        <div class="control-panel">
+            <div class="form-group">
+                <label for="currency-pair">Currency Pair:</label>
+                <select id="currency-pair">
+                    <option value="OANDA:EUR_USD">EUR/USD</option>
+                    <option value="OANDA:USD_JPY">USD/JPY</option>
+                    <option value="OANDA:GBP_USD">GBP/USD</option>
+                    <option value="OANDA:USD_CHF">USD/CHF</option>
+                    <option value="OANDA:AUD_USD">AUD/USD</option>
+                    <option value="OANDA:USD_CAD">USD/CAD</option>
+                    <option value="OANDA:NZD_USD">NZD/USD</option>
+                    <option value="OANDA:EUR_GBP">EUR/GBP</option>
+                    <option value="OANDA:EUR_JPY">EUR/JPY</option>
+                    <option value="OANDA:GBP_JPY">GBP/JPY</option>
+                    <option value="OANDA:EUR_AUD">EUR/AUD</option>
+                    <option value="OANDA:EUR_CAD">EUR/CAD</option>
+                    <option value="OANDA:AUD_JPY">AUD/JPY</option>
+                    <option value="OANDA:CAD_JPY">CAD/JPY</option>
+                    <option value="OANDA:GBP_AUD">GBP/AUD</option>
+                </select>
+            </div>
+            
+            <div class="button-group">
+                <button id="connect-btn">Connect</button>
+                <button id="start-btn" disabled>Start Bot</button>
+            </div>
+        </div>
+        
+        <div class="dashboard">
+            <div class="price-display">
+                <h2>Current Price</h2>
+                <div id="current-price">-</div>
+            </div>
+            
+            <div class="indicators">
+                <h2>Indicators</h2>
+                <div class="indicator">
+                    <span>RSI (14):</span>
+                    <span id="rsi-value">-</span>
+                </div>
+                <div class="indicator">
+                    <span>EMA (9):</span>
+                    <span id="ema9-value">-</span>
+                </div>
+                <div class="indicator">
+                    <span>MACD:</span>
+                    <span id="macd-value">-</span>
+                </div>
+                <div class="indicator">
+                    <span>Signal:</span>
+                    <span id="signal-value">-</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="signal-history">
+            <h2>Signal History</h2>
+            <div id="history-list"></div>
+        </div>
+    </div>
+
+
+
+<script src="Js/current-year.js"></script>
+<script src="Js/toggle.js"></script>
+<script src="Js/responsive-web.js"></script>
+<script src="Js/loading-animation.js"></script>
+<script src="Js/bot-Esteem-signal-2.0.js"></script>
+<script>lucide.createIcons(); // Activates all <i data-lucide=""></script>
+
+  <footer class="site-footer">
+  <div class="footer-content">
+    
+    <!-- Brand -->
+    <div class="footer-brand">
+      <h3>Esteem Signal 2.0</h3>
+      <p>Esteem Signals Trading</p>
+    </div>
+
+    
+
+    <!-- Footer Navigation Links -->
+    <div class="footer-links">
+      <a href="index.html"><i data-lucide="home"></i> Esteem-2.0</a>
+      <a href="Esteem-1.0.html"><i data-lucide="activity"></i> Esteem-1.0</a>
+      <a href="journal.html"><i data-lucide="book-open-text"></i> Trade Journal</a>
+      <a href="about.html"><i data-lucide="info"></i> About</a>
+    </div>
+
+    <!-- Copyright -->
+    <div class="footer-bottom">
+      <p>&copy; 2025 Esteem Signal 2.0. All Rights Reserved.</p>
+    </div>
+
+  </div>
+</footer>
+
+</body>
+</html>

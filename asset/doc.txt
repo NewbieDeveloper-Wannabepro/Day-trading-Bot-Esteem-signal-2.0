@@ -1,0 +1,225 @@
+Trading Bot Project Documentation
+Project Overview
+Project Name: Forex Trading Bot
+Version: 1.0
+Last Updated: [Current Date]
+Developer: [Your Name/Company]
+
+###Description
+An automated trading bot that analyzes Forex market data using technical indicators (RSI, EMA, MACD) to generate buy/sell signals. The bot connects to real-time market data via Finnhub API and can send alerts via Telegram.
+
+Features
+Real-time price data via Finnhub WebSocket
+
+Technical indicators calculation:
+
+Relative Strength Index (RSI)
+
+Exponential Moving Average (EMA)
+
+Moving Average Convergence Divergence (MACD)
+
+Automated signal generation
+
+Signal history with localStorage persistence
+
+Telegram notifications
+
+Responsive UI with mobile sidebar and desktop navbar
+
+File Structure
+/project-root
+│── index.html          # Main trading dashboard
+│── about.html          # About/Info page
+│── style.css           # Main stylesheet
+│── bot.js              # Core trading logic
+│── nav.js              # Navigation functionality (optional)
+│── documentation.txt   # This documentation file
+Technical Requirements
+Modern web browser (Chrome, Firefox, Edge, Safari)
+
+Internet connection
+
+Finnhub API key (for market data)
+
+Telegram bot token and chat ID (for alerts)
+
+Setup Instructions
+1. API Configuration
+Replace placeholder values in bot.js:
+
+javascript
+const config = {
+    finnhubApiKey: 'YOUR_FINNHUB_API_KEY',
+    telegramBotToken: 'YOUR_TELEGRAM_BOT_TOKEN',
+    telegramChatId: 'YOUR_TELEGRAM_CHAT_ID',
+    // ... other config
+};
+2. Deploying the Application
+Simply open index.html in a web browser. No server required as it runs client-side.
+
+Usage Guide
+Dashboard (index.html)
+Automatically connects to market data on load
+
+Displays:
+
+Current price
+
+Technical indicators (RSI, EMA, MACD)
+
+Generated signals
+
+Signal history
+
+Navigation
+Desktop: Top navigation bar
+
+Mobile: Sidebar accessible via hamburger menu
+
+Links to:
+
+Dashboard
+
+About page
+
+History section (on dashboard page)
+
+Technical Indicators Logic
+RSI (Relative Strength Index)
+Period: 14 (configurable)
+
+Overbought threshold: 70 (configurable)
+
+Oversold threshold: 30 (configurable)
+
+EMA (Exponential Moving Average)
+Period: 9 (configurable)
+
+MACD
+Fast period: 12 (configurable)
+
+Slow period: 26 (configurable)
+
+Signal period: 9 (configurable)
+
+Signal Generation Logic
+Buy signals are generated when:
+
+RSI < Oversold threshold (30)
+
+Price > EMA9
+
+MACD line > Signal line
+
+MACD histogram > 0
+
+Sell signals are generated when:
+
+RSI > Overbought threshold (70)
+
+Price < EMA9
+
+MACD line < Signal line
+
+MACD histogram < 0
+
+API Reference
+Finnhub WebSocket
+Endpoint: wss://ws.finnhub.io?token=YOUR_API_KEY
+
+Subscription message format:
+
+json
+{"type":"subscribe","symbol":"OANDA:EUR_USD"}
+Telegram Bot API
+Endpoint: https://api.telegram.org/bot{token}/sendMessage
+
+Required parameters:
+
+chat_id: Your Telegram chat ID
+
+text: URL-encoded message content
+
+Customization Options
+All customizable parameters are in the config object in bot.js:
+
+Indicator periods
+
+Threshold values
+
+Default currency pair
+
+Price history size
+
+API credentials
+
+Troubleshooting
+Common Issues
+No data appearing:
+
+Verify Finnhub API key is correct
+
+Check browser console for errors
+
+Ensure WebSocket connection is established
+
+Telegram alerts not working:
+
+Verify bot token and chat ID
+
+Check browser console for API errors
+
+Ensure Telegram bot is properly set up
+
+Mobile sidebar not opening:
+
+Verify nav.js is properly linked
+
+Check for JavaScript errors in console
+
+Browser Compatibility
+Tested on:
+
+Chrome (latest)
+
+Firefox (latest)
+
+Edge (latest)
+
+Safari (latest)
+
+Known Limitations
+Requires modern browser features (WebSocket, localStorage)
+
+Limited to 15 predefined currency pairs
+
+No user authentication
+
+All processing happens client-side
+
+MIT License
+
+Copyright (c) 2025 NewbieDeveloper-Wannabepro
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Support
+
+For support contact: [876-545-5583

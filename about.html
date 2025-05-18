@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Our Trading Bot</title>
+    <link rel="stylesheet" href="css/esteem-2.0.css">
+    <link rel="stylesheet" href="css/footer-v-1.0.css">
+    <link rel="shortcut icon" href="./images/asset/Create a anime profile picture male black.jpg" type="image/x-icon">
+     <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Additional styles specific to the About page */
+        .about-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .about-header h1 {
+            color: #3498db;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .about-header p {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        @media (max-width: 768px) {
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .about-card {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .about-card h2 {
+            color: #2c3e50;
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .team-members {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .team-member {
+            text-align: center;
+        }
+        
+        .team-member img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 15px;
+            border: 3px solid #3498db;
+        }
+        
+        .team-member h3 {
+            margin: 0 0 5px 0;
+            color: #2c3e50;
+        }
+        
+        .team-member p {
+            color: #7f8c8d;
+            margin: 0;
+        }
+        
+        .back-to-bot {
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+        .back-to-bot a {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .back-to-bot a:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+
+  <!-- Top Navbar for Desktop -->
+<nav class="navbar">
+  <div class="nav-logo">Esteem Signal 2.0</div>
+  <ul class="nav-links">
+  <li><a href="index.html"><i data-lucide="home"></i> Esteem-2.0</a></li>
+  <li><a href="Esteem-1.0.html"><i data-lucide="activity"></i> Esteem-1.0</a></li>
+  <li><a href="journal.html"><i data-lucide="book-open-text"></i> Trade Journal</a></li>
+</ul>
+
+  <div class="mobile-toggle" id="menu-toggle">&#9776;</div>
+</nav>
+
+<!-- Sidebar for Mobile -->
+<div class="sidebar" id="mobile-menu">
+  <ul>
+  <li><a href="index.html"><i data-lucide="home"></i> Esteeem-2.0</a></li>
+  <li><a href="Esteem-1.0.html"><i data-lucide="activity"></i> Esteem-1.0</a></li>
+  <li><a href="journal.html"><i data-lucide="book-open-text"></i> Trade Journal</a></li>
+  <li><button id="close-sidebar"><i data-lucide="x"></i> Close</button></li>
+</ul>
+
+</div>
+
+<div id="loading-screen">
+  <div class="loader">
+    <div class="glow-circle"></div>
+    <div class="loader-text">Loading...</div>
+  </div>
+</div>
+
+
+    <div class="container">
+        <div class="about-header">
+            <h1>About Our Trading Bot</h1>
+            <p>Revolutionizing automated trading with cutting-edge technology and reliable algorithms</p>
+        </div>
+        
+        <div class="about-content">
+            <div class="about-card">
+                <h2>Our Mission</h2>
+                <p>We created this trading bot to democratize access to advanced trading algorithms that were previously only available to institutional investors. Our mission is to provide retail traders with professional-grade tools to help them make better trading decisions.</p>
+                <p>The bot combines multiple technical indicators (RSI, EMA, and MACD) to generate high-probability trading signals, giving you an edge in the fast-moving Forex markets.</p>
+            </div>
+            
+            <div class="about-card">
+                <h2>How It Works</h2>
+                <p>Our system connects directly to real-time market data through the Finnhub API, processing price information to calculate key technical indicators:</p>
+                <ul>
+                    <li><strong>Relative Strength Index (RSI)</strong> - Identifies overbought/oversold conditions</li>
+                    <li><strong>Exponential Moving Average (EMA)</strong> - Tracks price trends</li>
+                    <li><strong>Moving Average Convergence Divergence (MACD)</strong> - Signals momentum changes</li>
+                </ul>
+                <p>When all indicators align, the bot generates signals and can optionally alert you via Telegram.</p>
+            </div>
+            
+            <div class="about-card">
+                <h2>Technology Stack</h2>
+                <p>This application is built with modern web technologies:</p>
+                <ul>
+                    <li><strong>Frontend</strong>: HTML5, CSS3, JavaScript (ES6+)</li>
+                    <li><strong>Data API</strong>: Finnhub WebSocket for real-time prices</li>
+                    <li><strong>Algorithms</strong>: Custom implementations of technical indicators</li>
+                    <li><strong>Notifications</strong>: Telegram Bot API</li>
+                    <li><strong>Storage</strong>: Browser localStorage for signal history</li>
+                </hr>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Gs-_tleyz3Q?si=e4c547iNNWCwYIvj" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/JALcou_3qgo?si=yWBEGXnz1mls7GdH" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                </ul>
+            </div>
+            
+            <div class="about-card">
+                <h2>Our Team</h2>
+                <p>We're a small team of developers and traders passionate about creating useful financial tools.</p>
+                
+                <div class="team-members">
+                    <div class="team-member">
+                        <img src="images/asset/Create a anime profile picture male black.jpg" alt="Team Member">
+                        <h3>Aldane Hutchinson</h3>
+                        <p>Lead Developer</p>
+                    </div>
+                    <div class="team-member">
+                        <img src="asset/pic for my web.jfif" alt="Team Member">
+                        <h3>Sarah Chen</h3>
+                        <p>Algorithm Specialist</p>
+                    </div>
+                    <div class="team-member">
+                        <img src="asset/pic for my web 2.jfif" alt="Team Member">
+                        <h3>Michael Rodriguez</h3>
+                        <p>Financial Analyst</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="back-to-bot">
+            <a href="index.html">Back to Trading Bot</a>
+        </div>
+    </div>
+<script src="Js/responsive-web.js"></script>
+<script src="Js/loading-animation.js"></script>
+<script>lucide.createIcons(); // Activates all <i data-lucide=""></script>
+
+
+     <footer class="animated-footer">
+  <div class="footer-glow"></div>
+
+  <div class="footer-container">
+    <div class="footer-brand">
+      <h2><i class="fas fa-bolt"></i> Esteem Signal 2.0</h2>
+      <p>Your companion in real-time Forex signal execution.</p>
+    </div>
+
+    <div class="footer-links">
+      <a href="index.html"><i class="fas fa-arrow-right"></i> Esteem-2.0</a>
+      <a href="Esteem-1.0.html"><i class="fas fa-arrow-right"></i> Esteem-1.0</a>
+      <a href="journal.html"><i class="fas fa-arrow-right"></i> Trade Journal</a>
+      <a href="About-v-1.0.html"><i class="fas fa-arrow-right"></i> About</a>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2025 Esteem Signal. Crafted with <i class="fas fa-heart"></i> for traders.</p>
+    </div>
+  </div>
+</footer>
+    <script src="Js/footer-v-1.0.js"></script>
+
+</body>
+</html>

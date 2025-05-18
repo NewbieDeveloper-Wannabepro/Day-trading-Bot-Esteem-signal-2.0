@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Esteem Journal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <link rel="stylesheet" href="css/footer-v-1.0.css">
+  <link rel="stylesheet" href="css/esteem-1.0-loader.css">
+  <link rel="shortcut icon" href="images/asset/Create a anime profile picture male black.jpg" type="image/x-icon">
+  <!-- Add Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-100 p-4">
+
+     <div id="loading-screen">
+  <div class="loader">
+    <div class="glow-circle"></div>
+    <div class="loader-text">Loading...</div>
+  </div>
+</div>
+
+    <!-- Responsive Navigation Bar -->
+  <nav class="bg-blue-600 text-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="flex justify-between items-center h-16">
+        <!-- Logo/Brand -->
+        <div class="flex-shrink-0 flex items-center">
+          <i class="fas fa-chart-line text-xl mr-2"></i>
+          <span class="font-bold text-xl"> Esteem Tracker</span>
+        </div>
+        
+        <!-- Desktop Navigation -->
+        <div class="hidden md:flex space-x-4">
+        <a href="index.html" class="block px-3 py-2 rounded-md text-base font-medium bg-blue-800">Esteem-2.0</a>
+        <a href="Esteem-1.0.html" class="block px-3 py-2 rounded-md text-base font-medium bg-blue-800">Esteem-1.0</a>
+        <a href="jounral_about.html" class="px-3 py-2 rounded-md text-sm font-medium bg-blue-700">How It works?</a>
+        </div>
+        
+        <!-- Mobile menu button -->
+        <div class="md:hidden">
+          <button id="mobile-menu-button" class="p-2 rounded-md hover:bg-blue-700 focus:outline-none">
+            <i class="fas fa-bars"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Mobile Menu (hidden by default) -->
+    <div id="mobile-menu" class="md:hidden hidden bg-blue-700">
+      <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+        <a href="index.html" class="block px-3 py-2 rounded-md text-base font-medium bg-blue-800">Signal</a>
+        <a href="jounral_about.html" class="block px-3 py-2 rounded-md text-base font-medium bg-blue-800">How it works?</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-md">
+    <h1 class="text-2xl font-bold mb-4"> Esteeem Journal</h1>
+    
+    <!-- Enhanced Stats Section -->
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
+      <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
+        <h3 class="text-lg font-semibold text-blue-800">Total Trades</h3>
+        <p id="totalTrades" class="text-3xl font-bold text-blue-600">0</p>
+      </div>
+      <div class="bg-green-50 p-4 rounded-lg border border-green-100">
+        <h3 class="text-lg font-semibold text-green-800">Win Rate</h3>
+        <p id="winRate" class="text-3xl font-bold text-green-600">0%</p>
+      </div>
+      <div class="bg-purple-50 p-4 rounded-lg border border-purple-100">
+        <h3 class="text-lg font-semibold text-purple-800">Avg Confidence</h3>
+        <p id="avgConfidence" class="text-3xl font-bold text-purple-600">0</p>
+      </div>
+      <div class="bg-emerald-50 p-4 rounded-lg border border-emerald-100">
+        <h3 class="text-lg font-semibold text-emerald-800">Total P&L</h3>
+        <p id="totalPL" class="text-3xl font-bold text-emerald-600">$0.00</p>
+      </div>
+      <div class="bg-indigo-50 p-4 rounded-lg border border-indigo-100">
+        <h3 class="text-lg font-semibold text-indigo-800">Best Confidence</h3>
+        <p id="bestConfidence" class="text-3xl font-bold text-indigo-600">-</p>
+      </div>
+    </div>
+    
+    <!-- Filter Section -->
+    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mb-6">
+      <h3 class="text-lg font-semibold mb-3">Filter Trades</h3>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Instrument</label>
+          <select id="instrumentFilter" class="p-2 border rounded w-full">
+            <option value="All">All Instruments</option>
+            <option value="EUR/USD">EUR/USD</option>
+            <option value="GBP/USD">GBP/USD</option>
+            <option value="USD/JPY">USD/JPY</option>
+            <option value="AUD/USD">AUD/USD</option>
+            <option value="XAU/USD">XAU/USD (Gold)</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Date Range</label>
+          <div class="flex gap-2">
+            <input type="date" id="startDate" class="p-2 border rounded w-full">
+            <input type="date" id="endDate" class="p-2 border rounded w-full">
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Result</label>
+          <select id="resultFilter" class="p-2 border rounded w-full">
+            <option value="All">All Results</option>
+            <option value="Win">Wins Only</option>
+            <option value="Loss">Losses Only</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Confidence</label>
+          <select id="confidenceFilter" class="p-2 border rounded w-full">
+            <option value="0">All Levels</option>
+            <option value="1">1 ★</option>
+            <option value="2">2 ★★</option>
+            <option value="3">3 ★★★</option>
+            <option value="4">4 ★★★★</option>
+            <option value="5">5 ★★★★★</option>
+          </select>
+        </div>
+      </div>
+      <div class="mt-3 flex justify-end gap-2">
+        <button id="resetFilters" class="bg-gray-200 text-gray-700 py-2 px-4 rounded hover:bg-gray-300">
+          Reset Filters
+        </button>
+        <button id="applyFilters" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
+          Apply Filters
+        </button>
+      </div>
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="flex justify-end gap-2 mb-6">
+      <button id="exportCSV" class="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
+        </svg>
+        Export to CSV
+      </button>
+      <button id="clearJournal" class="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600">
+        Clear Journal
+      </button>
+    </div>
+    
+    <!-- Charts Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      <div class="bg-white p-4 rounded-lg border border-gray-200">
+        <h3 class="text-lg font-semibold mb-2">Win/Loss Distribution</h3>
+        <canvas id="winLossChart"></canvas>
+      </div>
+      <div class="bg-white p-4 rounded-lg border border-gray-200">
+        <h3 class="text-lg font-semibold mb-2">Performance by Instrument</h3>
+        <canvas id="instrumentChart"></canvas>
+      </div>
+    </div>
+    
+    <!-- Trade Entry Form -->
+    <form id="tradeForm" class="grid grid-cols-2 gap-4 mb-6">
+      <div class="col-span-2 grid grid-cols-2 gap-4">
+        <select id="instrument" class="p-2 border rounded" required>
+          <option value="" disabled selected>Select Instrument</option>
+          <option value="EUR/USD">EUR/USD</option>
+          <option value="GBP/USD">GBP/USD</option>
+          <option value="USD/JPY">USD/JPY</option>
+          <option value="AUD/USD">AUD/USD</option>
+          <option value="XAU/USD">XAU/USD (Gold)</option>
+        </select>
+        <input type="datetime-local" id="time" class="p-2 border rounded" required />
+      </div>
+      
+      <select id="direction" class="p-2 border rounded">
+        <option value="CALL">CALL (Buy)</option>
+        <option value="PUT">PUT (Sell)</option>
+      </select>
+      <input type="number" step="any" id="entryPrice" placeholder="Entry Price" class="p-2 border rounded" required />
+      <input type="number" step="any" id="expiryPrice" placeholder="Expiry Price" class="p-2 border rounded" required />
+      <input type="number" step="any" id="positionSize" placeholder="Position Size ($)" class="p-2 border rounded" />
+      <select id="result" class="p-2 border rounded">
+        <option value="Win">Win</option>
+        <option value="Loss">Loss</option>
+      </select>
+      <input type="text" id="reason" placeholder="Reason for Trade" class="p-2 border rounded" />
+      <input type="number" min="1" max="5" id="confidence" placeholder="Confidence (1-5)" class="p-2 border rounded" />
+      
+      <div class="col-span-2">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Notes (Markdown Supported)</label>
+        <textarea id="notes" placeholder="Detailed trade analysis..." class="p-2 border rounded w-full min-h-[100px]"></textarea>
+        <div class="mt-1 flex justify-between text-sm text-gray-500">
+          <span>Supports **bold**, *italic*, `code`, etc.</span>
+          <button type="button" id="previewNotes" class="text-blue-500 hover:underline">Preview</button>
+        </div>
+        <div id="notesPreview" class="hidden mt-2 p-3 border rounded bg-gray-50 prose max-w-none"></div>
+      </div>
+      
+      <button type="submit" class="col-span-2 bg-blue-500 text-white py-2 rounded hover:bg-blue-600">Add Trade</button>
+    </form>
+    
+    <!-- Journal Table -->
+    <div class="overflow-x-auto mb-6">
+      <table class="min-w-full text-sm table-auto">
+        <thead class="bg-gray-200">
+          <tr>
+            <th class="p-2">Instrument</th>
+            <th class="p-2">Time</th>
+            <th class="p-2">Direction</th>
+            <th class="p-2">Entry</th>
+            <th class="p-2">Expiry</th>
+            <th class="p-2">Size</th>
+            <th class="p-2">P&L</th>
+            <th class="p-2">Result</th>
+            <th class="p-2">Reason</th>
+            <th class="p-2">Confidence</th>
+            <th class="p-2">Notes</th>
+            <th class="p-2">Delete</th>
+          </tr>
+        </thead>
+        <tbody id="journalBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+ 
+<footer class="animated-footer">
+  <div class="footer-glow"></div>
+
+  <div class="footer-container">
+    <div class="footer-brand">
+      <h2><i class="fas fa-bolt"></i> Esteem Journal</h2>
+      <p>Your companion in real-time Forex signal execution.</p>
+    </div>
+
+    <div class="footer-social">
+      <a href="https://twitter.com" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+      <a href="https://facebook.com" target="_blank" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+      <a href="https://github.com" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+      <a href="https://linkedin.com" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+    </div>
+
+    <div class="footer-links">
+      <a href="index.html"><i class="fas fa-arrow-right"></i> Esteem-2.0</a>
+      <a href="Esteem-1.0.html"><i class="fas fa-arrow-right"></i> Esteem-1.0</a>
+      <a href="journal.html"><i class="fas fa-arrow-right"></i> Trade Journal</a>
+      <a href="About-v-1.0.html"><i class="fas fa-arrow-right"></i> About</a>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2025 Esteem Signal. Crafted with <i class="fas fa-heart"></i> for traders.</p>
+    </div>
+  </div>
+</footer>
+
+  <script src="Js/loading-animation.js"></script>
+  <script src="Js/footer-v-1.0.js"></script>
+  <script src="Js/Journal-functionality.js"></script>
+</body>
+</html>

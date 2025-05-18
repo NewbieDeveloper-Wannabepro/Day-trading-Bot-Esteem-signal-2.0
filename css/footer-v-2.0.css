@@ -1,0 +1,163 @@
+.site-footer {
+  background: rgba(20, 20, 30, 0.95);
+  color: #fff;
+  padding: 2rem 1rem;
+  margin-top: 3rem;
+  font-family: 'Segoe UI', sans-serif;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.footer-brand h3 {
+  font-size: 1.5rem;
+  color: #0ff;
+  margin-bottom: 0.3rem;
+}
+
+.footer-brand p {
+  color: #ccc;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.footer-links {
+  margin: 1rem 0;
+}
+
+.footer-links a {
+  margin: 0 0.75rem;
+  color: #0ff;
+  text-decoration: none;
+  transition: color 0.3s;
+  font-size: 0.95rem;
+}
+
+.footer-links a:hover {
+  color: #fff;
+}
+
+.footer-bottom {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  color: #aaa;
+}
+
+/* Responsive */
+@media (min-width: 600px) {
+  .footer-content {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+  }
+
+  .footer-brand,
+  .footer-links,
+  .footer-bottom {
+    flex: 1;
+  }
+
+  .footer-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .footer-bottom {
+    text-align: right;
+  }
+}
+
+
+/* Keyframe animations */
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    text-shadow: 0 0 8px #0ff, 0 0 16px #0ff;
+  }
+  50% {
+    text-shadow: 0 0 12px #00f2ff, 0 0 24px #00f2ff;
+  }
+}
+
+/* Apply animation to footer */
+.site-footer {
+  animation: fadeSlideUp 1s ease-out 0.5s both;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Glow effect on brand title */
+.footer-brand h3 {
+  animation: glowPulse 2.5s ease-in-out infinite;
+}
+
+/* Glowing underline effect on hover */
+.footer-links a {
+  position: relative;
+}
+
+.footer-links a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 100%;
+  height: 2px;
+  background: #0ff;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s ease;
+}
+
+.footer-links a:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* Floating dots (optional background animation) */
+.site-footer::before {
+  content: "";
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, #0ff3 2%, transparent 3%) repeat;
+  background-size: 40px 40px;
+  animation: moveDots 20s linear infinite;
+  top: -50%;
+  left: -50%;
+  z-index: 0;
+  opacity: 0.15;
+}
+
+@keyframes moveDots {
+  from {
+    transform: translate(0, 0);
+  }
+  to {
+    transform: translate(100px, 100px);
+  }
+}
+
+.site-footer > .footer-content {
+  position: relative;
+  z-index: 1;
+}
+
+

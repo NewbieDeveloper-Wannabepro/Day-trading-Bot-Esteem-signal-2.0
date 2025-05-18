@@ -1,0 +1,363 @@
+:root {
+    --primary-bg: #1e1e2f;
+    --secondary-bg: #2a2a3d;
+    --signal-bg: #333348;
+    --buy-color: #4CAF50;
+    --sell-color: #F44336;
+    --test-color: #FF9800;
+    --neutral-color: #2196F3;
+    --text-color: #ffffff;
+    --warning-color: #ffcc00;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--primary-bg);
+    color: var(--text-color);
+    margin: 0;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #111;
+  color: white;
+  padding: 15px 25px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.nav-logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #00bfff;
+}
+
+.nav-links {
+  display: flex;
+  gap: 25px;
+  list-style: none;
+}
+
+.nav-links li a {
+  text-decoration: none;
+  color: white;
+  transition: color 0.3s ease;
+}
+
+.nav-links li a:hover {
+  color: #00bfff;
+}
+
+/* Sidebar (mobile only) */
+.sidebar {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 260px;
+  height: 100%;
+  background: #1c1c2e;
+  box-shadow: 2px 0 12px rgba(0,0,0,0.2);
+  padding-top: 70px;
+  z-index: 9999;
+  transition: transform 0.3s ease;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  padding: 15px 25px;
+}
+
+.sidebar ul li a,
+.sidebar ul li button {
+  color: white;
+  text-decoration: none;
+  font-size: 1.1rem;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+}
+
+.sidebar ul li a:hover,
+.sidebar ul li button:hover {
+  background: #333;
+  border-radius: 4px;
+}
+
+
+.sidebar ul li a i,
+.sidebar ul li button i,
+.nav-links li a i {
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+/* Animate the sidebar */
+.sidebar {
+  transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sidebar.active {
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+  
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: var(--secondary-bg);
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.dashboard {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+@media (max-width: 768px) {
+    .dashboard {
+        grid-template-columns: 1fr;
+    }
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+    color: #6ec8ff;
+    grid-column: 1 / -1;
+}
+
+.control-panel {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    grid-column: 1 / -1;
+}
+
+select, button {
+    padding: 10px 15px;
+    border-radius: 6px;
+    border: none;
+    background: var(--signal-bg);
+    color: white;
+    font-weight: 600;
+}
+
+button {
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+button:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.price-display {
+    background: var(--signal-bg);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.pair-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.pair-name {
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+#currentPrice {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 10px 0;
+    font-family: 'Courier New', monospace;
+}
+
+#signal {
+    font-size: 1.1rem;
+    font-weight: 600;
+    min-height: 24px;
+    margin-top: 10px;
+}
+
+.indicators {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.indicator-box {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 12px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.indicator-label {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    margin-bottom: 5px;
+}
+
+.indicator-value {
+    font-size: 1.2rem;
+    font-weight: 600;
+    font-family: 'Courier New', monospace;
+}
+
+.button-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.btn {
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.buy-btn {
+    background: var(--buy-color);
+}
+
+.sell-btn {
+    background: var(--sell-color);
+}
+
+.test-btn {
+    background: var(--test-color);
+    width: 100%;
+}
+
+.history-panel {
+    background: var(--signal-bg);
+    border-radius: 8px;
+    padding: 15px;
+    height: 400px;
+    overflow-y: auto;
+}
+
+.history-title {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.clear-history {
+    background: transparent;
+    border: 1px solid var(--warning-color);
+    color: var(--warning-color);
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    border-radius: 4px;
+}
+
+.signal-log {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.signal-item {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.signal-buy {
+    border-left: 4px solid var(--buy-color);
+}
+
+.signal-sell {
+    border-left: 4px solid var(--sell-color);
+}
+
+.signal-time {
+    opacity: 0.7;
+    font-size: 0.8rem;
+}
+
+.status {
+    margin-top: 20px;
+    font-size: 0.9rem;
+    text-align: center;
+    opacity: 0.7;
+    grid-column: 1 / -1;
+}
+
+.connection-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.connection-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ccc;
+}
+
+.connected {
+    background: var(--buy-color);
+}
+
+
+/* === Responsive Fixes === */
+@media (max-width: 768px) {
+    
+}
+
+.nav-links {
+    display: none;
+  }
+
+  .mobile-toggle {
+    display: block;
+  }
+
+  .sidebar {
+    display: block;
+    transform: translateX(-100%);
+  }
+
+  .sidebar.active {
+    transform: translateX(0);
+  }
