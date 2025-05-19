@@ -1,4 +1,4 @@
-// 1. ENHANCED CONFIGURATION
+/// 1. ENHANCED CONFIGURATION
 const config = {
     finnhubApiKey: 'd0kh4ohr01qn937kqp2gd0kh4ohr01qn937kqp30',
     telegramBotToken: '7610946823:AAEXmOV-Md2FkR3HMmqno4hyRsfoulA1MYM', 
@@ -12,7 +12,8 @@ const config = {
     },
     overbought: 70,
     oversold: 30,
-    maxHistorySize: 100
+    maxHistorySize: 100,
+    initialHistoryCount: 50  // Number of historical data points to load initially
 };
 
 // 2. OPTIMIZED STATE MANAGEMENT
@@ -51,17 +52,53 @@ const elements = {
     ema9Display: document.getElementById('ema9-value'),
     macdDisplay: document.getElementById('macd-value'),
     signalDisplay: document.getElementById('signal-value'),
-    historyList: document.getElementById('history-list')
+    historyList: document.getElementById('history-list'),
+    statusDisplay: document.getElementById('connection-status')
 };
 
 // 4. INITIALIZATION
-function init() {
+async function init() {
     loadHistory();
     setupEventListeners();
+    // Pre-load some historical data when page loads
+    await loadInitialHistoricalData();
 }
 
-// 5. WEBSOCKET CONNECTION (Optimized)
-function connectWebSocket() {
+async function loadInitialHistoricalData() {
+    try {
+        const history = await fetchHistoricalData(state.currentPair, config.initialHistoryCount);
+        if (history.length > 0) {
+            state.priceHistory = history;
+            calculateIndicators(); // Pre-calculate indicators
+            updateIndicatorsDisplay();
+            updateUI();
+            console.log(`Pre-loaded ${history.length} historical data points`);
+        }
+    } catch (error) {
+        console.error("Error loading initial history:", error);
+    }
+}
+
+// 5. HISTORICAL DATA LOADING
+async function fetchHistoricalData(symbol, count) {
+    const resolution = '15'; // 15-minute intervals (can be changed to D for daily, etc.)
+    const url = `https://finnhub.io/api/v1/stock/candle?symbol=${symbol}&resolution=${resolution}&count=${count}&token=${config.finnhubApiKey}`;
+    
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        if (data.c && data.c.length > 0) {
+            return data.c; // array of closing prices
+        }
+        return [];
+    } catch (error) {
+        console.error("Error fetching history:", error);
+        return [];
+    }
+}
+
+// 6. WEBSOCKET CONNECTION (Optimized)
+async function connectWebSocket() {
     if (state.socket) {
         state.socket.close();
     }
@@ -70,39 +107,67 @@ function connectWebSocket() {
     
     if (!config.finnhubApiKey) {
         console.error('Finnhub API key not configured');
+        updateStatus('Error: API key missing');
         return;
     }
     
-    state.socket = new WebSocket(`wss://ws.finnhub.io?token=${config.finnhubApiKey}`);
+    // Show loading status
+    updateStatus('Loading historical data...');
     
-    state.socket.onopen = () => {
-        state.isConnected = true;
-        updateUI();
-        subscribeToPair(state.currentPair);
-        console.log('WebSocket connected');
-    };
-    
-    state.socket.onclose = () => {
-        state.isConnected = false;
-        state.isRunning = false;
-        updateUI();
-        console.log('WebSocket disconnected');
-    };
-    
-    state.socket.onerror = (error) => {
-        console.error('WebSocket error:', error);
-    };
-    
-    state.socket.onmessage = (message) => {
-        const data = JSON.parse(message.data);
-        if (data.type === 'trade' && data.data && data.data[0]) {
-            // Throttle processing to avoid overwhelming the system
-            if (!state.lastProcessTime || Date.now() - state.lastProcessTime > 100) {
-                state.lastProcessTime = Date.now();
-                processPriceData(data.data[0].p);
-            }
+    try {
+        // Load additional history if needed
+        if (state.priceHistory.length < config.initialHistoryCount) {
+            const additionalNeeded = config.initialHistoryCount - state.priceHistory.length;
+            const additionalHistory = await fetchHistoricalData(state.currentPair, additionalNeeded);
+            state.priceHistory = [...additionalHistory, ...state.priceHistory].slice(-config.maxHistorySize);
         }
-    };
+        
+        updateStatus('Connecting to WebSocket...');
+        
+        state.socket = new WebSocket(`wss://ws.finnhub.io?token=${config.finnhubApiKey}`);
+        
+        state.socket.onopen = () => {
+            state.isConnected = true;
+            updateUI();
+            subscribeToPair(state.currentPair);
+            updateStatus('Connected - Waiting for data...');
+            console.log('WebSocket connected');
+        };
+        
+        state.socket.onclose = () => {
+            state.isConnected = false;
+            state.isRunning = false;
+            updateUI();
+            updateStatus('Disconnected');
+            console.log('WebSocket disconnected');
+        };
+        
+        state.socket.onerror = (error) => {
+            console.error('WebSocket error:', error);
+            updateStatus(`Error: ${error.message}`);
+        };
+        
+        state.socket.onmessage = (message) => {
+            const data = JSON.parse(message.data);
+            if (data.type === 'trade' && data.data && data.data[0]) {
+                // Throttle processing to avoid overwhelming the system
+                if (!state.lastProcessTime || Date.now() - state.lastProcessTime > 100) {
+                    state.lastProcessTime = Date.now();
+                    processPriceData(data.data[0].p);
+                    updateStatus('Connected - Receiving data');
+                }
+            }
+        };
+    } catch (error) {
+        console.error("Connection error:", error);
+        updateStatus(`Error: ${error.message}`);
+    }
+}
+
+function updateStatus(message) {
+    if (elements.statusDisplay) {
+        elements.statusDisplay.textContent = message;
+    }
 }
 
 function subscribeToPair(pair) {
@@ -119,7 +184,7 @@ function unsubscribeFromPair(pair) {
     }
 }
 
-// 6. OPTIMIZED PRICE PROCESSING
+// 7. OPTIMIZED PRICE PROCESSING
 function processPriceData(price) {
     requestAnimationFrame(() => {
         state.currentPrice = price;
@@ -139,7 +204,7 @@ function updatePriceDisplay() {
     elements.currentPriceDisplay.textContent = state.currentPrice.toFixed(5);
 }
 
-// 7. OPTIMIZED TECHNICAL INDICATORS
+// 8. OPTIMIZED TECHNICAL INDICATORS
 function calculateIndicators() {
     if (state.priceHistory.length < Math.max(config.rsiPeriod, config.macdConfig.slowPeriod)) {
         return;
@@ -209,67 +274,90 @@ function calculateEMA() {
     }
 }
 
+// OPTIMIZED MACD CALCULATION
 function calculateMACD() {
     const { fastPeriod, slowPeriod, signalPeriod } = config.macdConfig;
     
-    if (state.priceHistory.length < slowPeriod + signalPeriod) return;
-    
     // Initialize EMAs if needed
-    if (state.indicators.macd.fastEMA === null) {
-        // Initial fast EMA calculation
-        let fastSum = 0;
-        for (let i = 0; i < fastPeriod; i++) {
-            fastSum += state.priceHistory[state.priceHistory.length - fastPeriod + i];
-        }
-        state.indicators.macd.fastEMA = fastSum / fastPeriod;
-    } else {
-        // Update fast EMA incrementally
-        const fastMultiplier = 2 / (fastPeriod + 1);
-        state.indicators.macd.fastEMA = (state.currentPrice - state.indicators.macd.fastEMA) * fastMultiplier + state.indicators.macd.fastEMA;
+    if (state.indicators.macd.fastEMA === null && state.priceHistory.length >= fastPeriod) {
+        initEMAs();
     }
     
-    if (state.indicators.macd.slowEMA === null) {
-        // Initial slow EMA calculation
-        let slowSum = 0;
-        for (let i = 0; i < slowPeriod; i++) {
-            slowSum += state.priceHistory[state.priceHistory.length - slowPeriod + i];
-        }
-        state.indicators.macd.slowEMA = slowSum / slowPeriod;
-    } else {
-        // Update slow EMA incrementally
-        const slowMultiplier = 2 / (slowPeriod + 1);
-        state.indicators.macd.slowEMA = (state.currentPrice - state.indicators.macd.slowEMA) * slowMultiplier + state.indicators.macd.slowEMA;
+    // Update EMAs incrementally if initialized
+    if (state.indicators.macd.fastEMA !== null) {
+        updateEMAs();
     }
     
-    // MACD Line
-    const macdLine = state.indicators.macd.fastEMA - state.indicators.macd.slowEMA;
-    
-    // Signal Line (EMA of MACD Line)
-    if (state.indicators.macd.signalEMA === null) {
-        // Initial signal line calculation
-        state.indicators.macd.macdValues.push(macdLine);
-        if (state.indicators.macd.macdValues.length >= signalPeriod) {
-            let signalSum = 0;
-            for (let i = 0; i < signalPeriod; i++) {
-                signalSum += state.indicators.macd.macdValues[i];
-            }
-            state.indicators.macd.signalEMA = signalSum / signalPeriod;
+    // Calculate MACD components if we have enough data
+    if (state.indicators.macd.fastEMA !== null && 
+        state.indicators.macd.slowEMA !== null) {
+        
+        const macdLine = state.indicators.macd.fastEMA - state.indicators.macd.slowEMA;
+        
+        // Handle signal line
+        if (state.indicators.macd.signalEMA === null) {
+            initSignalLine(macdLine);
+        } else {
+            updateSignalLine(macdLine);
         }
-    } else {
-        // Update signal line incrementally
-        const signalMultiplier = 2 / (signalPeriod + 1);
-        state.indicators.macd.signalEMA = (macdLine - state.indicators.macd.signalEMA) * signalMultiplier + state.indicators.macd.signalEMA;
-    }
-    
-    // Only update final values if we have all components
-    if (state.indicators.macd.signalEMA !== null) {
-        state.indicators.macd.macdLine = macdLine;
-        state.indicators.macd.signalLine = state.indicators.macd.signalEMA;
-        state.indicators.macd.histogram = macdLine - state.indicators.macd.signalLine;
+        
+        // Only update final values when we have complete data
+        if (state.indicators.macd.signalEMA !== null) {
+            state.indicators.macd.macdLine = macdLine;
+            state.indicators.macd.signalLine = state.indicators.macd.signalEMA;
+            state.indicators.macd.histogram = macdLine - state.indicators.macd.signalLine;
+        }
     }
 }
 
-// 8. SIGNAL GENERATION (Unchanged)
+function initEMAs() {
+    // Fast EMA (12-period)
+    let sum = 0;
+    const fastPeriod = config.macdConfig.fastPeriod;
+    for (let i = 0; i < fastPeriod; i++) {
+        sum += state.priceHistory[state.priceHistory.length - fastPeriod + i];
+    }
+    state.indicators.macd.fastEMA = sum / fastPeriod;
+    
+    // Slow EMA (26-period)
+    sum = 0;
+    const slowPeriod = config.macdConfig.slowPeriod;
+    for (let i = 0; i < slowPeriod; i++) {
+        sum += state.priceHistory[state.priceHistory.length - slowPeriod + i];
+    }
+    state.indicators.macd.slowEMA = sum / slowPeriod;
+}
+
+function updateEMAs() {
+    const fastMultiplier = 2 / (config.macdConfig.fastPeriod + 1);
+    const slowMultiplier = 2 / (config.macdConfig.slowPeriod + 1);
+    
+    state.indicators.macd.fastEMA = 
+        (state.currentPrice - state.indicators.macd.fastEMA) * fastMultiplier + state.indicators.macd.fastEMA;
+    
+    state.indicators.macd.slowEMA = 
+        (state.currentPrice - state.indicators.macd.slowEMA) * slowMultiplier + state.indicators.macd.slowEMA;
+}
+
+function initSignalLine(currentMACD) {
+    state.indicators.macd.macdValues.push(currentMACD);
+    
+    if (state.indicators.macd.macdValues.length >= config.macdConfig.signalPeriod) {
+        let sum = 0;
+        for (let i = 0; i < config.macdConfig.signalPeriod; i++) {
+            sum += state.indicators.macd.macdValues[i];
+        }
+        state.indicators.macd.signalEMA = sum / config.macdConfig.signalPeriod;
+    }
+}
+
+function updateSignalLine(currentMACD) {
+    const signalMultiplier = 2 / (config.macdConfig.signalPeriod + 1);
+    state.indicators.macd.signalEMA = 
+        (currentMACD - state.indicators.macd.signalEMA) * signalMultiplier + state.indicators.macd.signalEMA;
+}
+
+// 9. SIGNAL GENERATION
 function generateSignal() {
     if (!state.indicators.rsi || !state.indicators.ema9 || !state.indicators.macd.macdLine) {
         return;
@@ -305,7 +393,7 @@ function generateSignal() {
     }
 }
 
-// 9. TELEGRAM ALERTS (Unchanged)
+// 10. TELEGRAM ALERTS
 function sendTelegramAlert(signal) {
     if (!config.telegramBotToken || !config.telegramChatId) {
         console.log('Telegram credentials not configured');
@@ -328,7 +416,7 @@ Time: ${signal.timestamp.toLocaleTimeString()}`;
         .catch(error => console.error('Error sending Telegram alert:', error));
 }
 
-// 10. SIGNAL HISTORY (Unchanged)
+// 11. SIGNAL HISTORY
 function addSignalToHistory(signal) {
     const signals = getSignalHistory();
     signals.push({
@@ -374,7 +462,7 @@ function loadHistory() {
     });
 }
 
-// 11. EVENT LISTENERS (Unchanged)
+// 12. EVENT LISTENERS
 function setupEventListeners() {
     elements.connectBtn.addEventListener('click', () => {
         if (state.isConnected) {
@@ -387,6 +475,7 @@ function setupEventListeners() {
     elements.startBtn.addEventListener('click', () => {
         state.isRunning = !state.isRunning;
         updateUI();
+        updateStatus(state.isRunning ? 'Bot running - Monitoring signals' : 'Bot paused');
     });
     
     elements.pairSelect.addEventListener('change', () => {
@@ -394,6 +483,7 @@ function setupEventListeners() {
             unsubscribeFromPair(state.currentPair);
             state.currentPair = elements.pairSelect.value;
             subscribeToPair(state.currentPair);
+            updateStatus(`Switched to ${state.currentPair}`);
         }
     });
 }
