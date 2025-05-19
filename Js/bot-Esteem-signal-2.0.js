@@ -1,35 +1,44 @@
-// 1. CONFIGURATION - 
+// 1. ENHANCED CONFIGURATION
 const config = {
     finnhubApiKey: 'd0kh4ohr01qn937kqp2gd0kh4ohr01qn937kqp30',
     telegramBotToken: '7610946823:AAEXmOV-Md2FkR3HMmqno4hyRsfoulA1MYM', 
     telegramChatId: '6469981362', 
     emaPeriod: 9,
+    rsiPeriod: 14,
     macdConfig: {
         fastPeriod: 12,
         slowPeriod: 26,
         signalPeriod: 9
     },
     overbought: 70,
-    oversold: 30
+    oversold: 30,
+    maxHistorySize: 100
 };
 
-// 2. STATE MANAGEMENT
+// 2. OPTIMIZED STATE MANAGEMENT
 let state = {
     isConnected: false,
     isRunning: false,
     priceHistory: [],
     indicators: {
         rsi: null,
+        prevGain: null,
+        prevLoss: null,
         ema9: null,
         macd: {
             macdLine: null,
             signalLine: null,
-            histogram: null
+            histogram: null,
+            fastEMA: null,
+            slowEMA: null,
+            signalEMA: null,
+            macdValues: []
         }
     },
     currentPrice: null,
     socket: null,
-    currentPair: 'OANDA:EUR_USD'
+    currentPair: 'OANDA:EUR_USD',
+    lastProcessTime: null
 };
 
 // 3. DOM ELEMENTS
@@ -51,7 +60,7 @@ function init() {
     setupEventListeners();
 }
 
-// 5. WEBSOCKET CONNECTION
+// 5. WEBSOCKET CONNECTION (Optimized)
 function connectWebSocket() {
     if (state.socket) {
         state.socket.close();
@@ -86,8 +95,12 @@ function connectWebSocket() {
     
     state.socket.onmessage = (message) => {
         const data = JSON.parse(message.data);
-        if (data.type === 'trade') {
-            processPriceData(data.data[0].p);
+        if (data.type === 'trade' && data.data && data.data[0]) {
+            // Throttle processing to avoid overwhelming the system
+            if (!state.lastProcessTime || Date.now() - state.lastProcessTime > 100) {
+                state.lastProcessTime = Date.now();
+                processPriceData(data.data[0].p);
+            }
         }
     };
 }
@@ -106,25 +119,27 @@ function unsubscribeFromPair(pair) {
     }
 }
 
-// 6. PRICE PROCESSING
+// 6. OPTIMIZED PRICE PROCESSING
 function processPriceData(price) {
-    state.currentPrice = price;
-    state.priceHistory.push(price);
-    
-    // Keep a reasonable history size
-    if (state.priceHistory.length > 100) {
-        state.priceHistory.shift();
-    }
-    
-    updatePriceDisplay();
-    calculateIndicators();
+    requestAnimationFrame(() => {
+        state.currentPrice = price;
+        
+        // Update price history efficiently
+        state.priceHistory.push(price);
+        if (state.priceHistory.length > config.maxHistorySize) {
+            state.priceHistory = state.priceHistory.slice(-config.maxHistorySize);
+        }
+        
+        updatePriceDisplay();
+        calculateIndicators();
+    });
 }
 
 function updatePriceDisplay() {
     elements.currentPriceDisplay.textContent = state.currentPrice.toFixed(5);
 }
 
-// 7. TECHNICAL INDICATORS
+// 7. OPTIMIZED TECHNICAL INDICATORS
 function calculateIndicators() {
     if (state.priceHistory.length < Math.max(config.rsiPeriod, config.macdConfig.slowPeriod)) {
         return;
@@ -141,22 +156,38 @@ function calculateRSI() {
     const period = config.rsiPeriod;
     if (state.priceHistory.length < period + 1) return;
     
-    let gains = 0;
-    let losses = 0;
-    
-    for (let i = 1; i <= period; i++) {
-        const change = state.priceHistory[i] - state.priceHistory[i - 1];
-        if (change > 0) {
-            gains += change;
-        } else {
-            losses -= change;
+    // Initial calculation
+    if (state.indicators.prevGain === null || state.indicators.prevLoss === null) {
+        let gains = 0;
+        let losses = 0;
+        
+        for (let i = 1; i <= period; i++) {
+            const change = state.priceHistory[i] - state.priceHistory[i - 1];
+            if (change > 0) {
+                gains += change;
+            } else {
+                losses -= change;
+            }
         }
+        
+        state.indicators.prevGain = gains / period;
+        state.indicators.prevLoss = losses / period;
+    } 
+    // Incremental update
+    else {
+        const change = state.priceHistory[state.priceHistory.length - 1] - 
+                      state.priceHistory[state.priceHistory.length - 2];
+        
+        const currentGain = change > 0 ? change : 0;
+        const currentLoss = change < 0 ? -change : 0;
+        
+        // Smooth the averages
+        state.indicators.prevGain = ((state.indicators.prevGain * (period - 1)) + currentGain) / period;
+        state.indicators.prevLoss = ((state.indicators.prevLoss * (period - 1)) + currentLoss) / period;
     }
     
-    const avgGain = gains / period;
-    const avgLoss = losses / period;
-    
-    const rs = avgGain / avgLoss;
+    const rs = state.indicators.prevLoss === 0 ? Infinity : 
+               (state.indicators.prevGain / state.indicators.prevLoss);
     state.indicators.rsi = 100 - (100 / (1 + rs));
 }
 
@@ -164,84 +195,81 @@ function calculateEMA() {
     const period = config.emaPeriod;
     if (state.priceHistory.length < period) return;
     
-    // Simple SMA as initial EMA
-    let sum = 0;
-    for (let i = 0; i < period; i++) {
-        sum += state.priceHistory[state.priceHistory.length - period + i];
+    if (state.indicators.ema9 === null) {
+        // Initial SMA calculation
+        let sum = 0;
+        for (let i = 0; i < period; i++) {
+            sum += state.priceHistory[state.priceHistory.length - period + i];
+        }
+        state.indicators.ema9 = sum / period;
+    } else {
+        // Incremental EMA update
+        const multiplier = 2 / (period + 1);
+        state.indicators.ema9 = (state.currentPrice - state.indicators.ema9) * multiplier + state.indicators.ema9;
     }
-    const sma = sum / period;
-    
-    // Calculate EMA
-    const multiplier = 2 / (period + 1);
-    let ema = sma;
-    
-    for (let i = period; i < state.priceHistory.length; i++) {
-        ema = (state.priceHistory[i] - ema) * multiplier + ema;
-    }
-    
-    state.indicators.ema9 = ema;
 }
 
 function calculateMACD() {
-    const fastPeriod = config.macdConfig.fastPeriod;
-    const slowPeriod = config.macdConfig.slowPeriod;
-    const signalPeriod = config.macdConfig.signalPeriod;
+    const { fastPeriod, slowPeriod, signalPeriod } = config.macdConfig;
     
     if (state.priceHistory.length < slowPeriod + signalPeriod) return;
     
-    // Calculate fast EMA
-    let fastSum = 0;
-    for (let i = 0; i < fastPeriod; i++) {
-        fastSum += state.priceHistory[state.priceHistory.length - fastPeriod + i];
+    // Initialize EMAs if needed
+    if (state.indicators.macd.fastEMA === null) {
+        // Initial fast EMA calculation
+        let fastSum = 0;
+        for (let i = 0; i < fastPeriod; i++) {
+            fastSum += state.priceHistory[state.priceHistory.length - fastPeriod + i];
+        }
+        state.indicators.macd.fastEMA = fastSum / fastPeriod;
+    } else {
+        // Update fast EMA incrementally
+        const fastMultiplier = 2 / (fastPeriod + 1);
+        state.indicators.macd.fastEMA = (state.currentPrice - state.indicators.macd.fastEMA) * fastMultiplier + state.indicators.macd.fastEMA;
     }
-    let fastEMA = fastSum / fastPeriod;
-    const fastMultiplier = 2 / (fastPeriod + 1);
     
-    for (let i = fastPeriod; i < state.priceHistory.length; i++) {
-        fastEMA = (state.priceHistory[i] - fastEMA) * fastMultiplier + fastEMA;
-    }
-    
-    // Calculate slow EMA
-    let slowSum = 0;
-    for (let i = 0; i < slowPeriod; i++) {
-        slowSum += state.priceHistory[state.priceHistory.length - slowPeriod + i];
-    }
-    let slowEMA = slowSum / slowPeriod;
-    const slowMultiplier = 2 / (slowPeriod + 1);
-    
-    for (let i = slowPeriod; i < state.priceHistory.length; i++) {
-        slowEMA = (state.priceHistory[i] - slowEMA) * slowMultiplier + slowEMA;
+    if (state.indicators.macd.slowEMA === null) {
+        // Initial slow EMA calculation
+        let slowSum = 0;
+        for (let i = 0; i < slowPeriod; i++) {
+            slowSum += state.priceHistory[state.priceHistory.length - slowPeriod + i];
+        }
+        state.indicators.macd.slowEMA = slowSum / slowPeriod;
+    } else {
+        // Update slow EMA incrementally
+        const slowMultiplier = 2 / (slowPeriod + 1);
+        state.indicators.macd.slowEMA = (state.currentPrice - state.indicators.macd.slowEMA) * slowMultiplier + state.indicators.macd.slowEMA;
     }
     
     // MACD Line
-    const macdLine = fastEMA - slowEMA;
+    const macdLine = state.indicators.macd.fastEMA - state.indicators.macd.slowEMA;
     
     // Signal Line (EMA of MACD Line)
-    let signalSum = 0;
-    const macdValues = [];
-    for (let i = 0; i < signalPeriod; i++) {
-        const idx = state.priceHistory.length - slowPeriod - signalPeriod + i;
-        if (idx >= 0) {
-            // Simplified - in reality we'd need to track MACD values over time
-            macdValues.push(fastEMA - slowEMA); // Approximation
-            signalSum += macdValues[i];
+    if (state.indicators.macd.signalEMA === null) {
+        // Initial signal line calculation
+        state.indicators.macd.macdValues.push(macdLine);
+        if (state.indicators.macd.macdValues.length >= signalPeriod) {
+            let signalSum = 0;
+            for (let i = 0; i < signalPeriod; i++) {
+                signalSum += state.indicators.macd.macdValues[i];
+            }
+            state.indicators.macd.signalEMA = signalSum / signalPeriod;
         }
-    }
-    let signalLine = signalSum / signalPeriod;
-    const signalMultiplier = 2 / (signalPeriod + 1);
-    
-    for (let i = signalPeriod; i < macdValues.length; i++) {
-        signalLine = (macdValues[i] - signalLine) * signalMultiplier + signalLine;
+    } else {
+        // Update signal line incrementally
+        const signalMultiplier = 2 / (signalPeriod + 1);
+        state.indicators.macd.signalEMA = (macdLine - state.indicators.macd.signalEMA) * signalMultiplier + state.indicators.macd.signalEMA;
     }
     
-    state.indicators.macd = {
-        macdLine: macdLine,
-        signalLine: signalLine,
-        histogram: macdLine - signalLine
-    };
+    // Only update final values if we have all components
+    if (state.indicators.macd.signalEMA !== null) {
+        state.indicators.macd.macdLine = macdLine;
+        state.indicators.macd.signalLine = state.indicators.macd.signalEMA;
+        state.indicators.macd.histogram = macdLine - state.indicators.macd.signalLine;
+    }
 }
 
-// 8. SIGNAL GENERATION
+// 8. SIGNAL GENERATION (Unchanged)
 function generateSignal() {
     if (!state.indicators.rsi || !state.indicators.ema9 || !state.indicators.macd.macdLine) {
         return;
@@ -277,7 +305,7 @@ function generateSignal() {
     }
 }
 
-// 9. TELEGRAM ALERTS
+// 9. TELEGRAM ALERTS (Unchanged)
 function sendTelegramAlert(signal) {
     if (!config.telegramBotToken || !config.telegramChatId) {
         console.log('Telegram credentials not configured');
@@ -300,7 +328,7 @@ Time: ${signal.timestamp.toLocaleTimeString()}`;
         .catch(error => console.error('Error sending Telegram alert:', error));
 }
 
-// 10. SIGNAL HISTORY
+// 10. SIGNAL HISTORY (Unchanged)
 function addSignalToHistory(signal) {
     const signals = getSignalHistory();
     signals.push({
@@ -346,7 +374,7 @@ function loadHistory() {
     });
 }
 
-// 11. EVENT LISTENERS
+// 11. EVENT LISTENERS (Unchanged)
 function setupEventListeners() {
     elements.connectBtn.addEventListener('click', () => {
         if (state.isConnected) {
