@@ -6,7 +6,7 @@
             telegramBotToken: '7767613691:AAHogbBbDRVilKSUGx_YkVIYELKZNw74f_k',
             telegramChatId: '-1002655764476',
             alertCooldown: 30000, // 30 seconds
-            rsiPeriod: 14,
+            rsiPeriod: 9,
             emaPeriod: 9,
             priceHistoryLength: 30
         };
@@ -162,7 +162,7 @@
         // ======================
         // 7. TECHNICAL INDICATORS
         // ======================
-        function calculateRSI(prices, period = 14) {
+        function calculateRSI(prices, period = 9) {
             if (prices.length < period + 1) return 50;
             
             let gains = 0;
