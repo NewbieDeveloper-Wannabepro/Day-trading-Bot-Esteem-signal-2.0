@@ -4,7 +4,7 @@
         const config = {
             finnhubApiKey: 'd0jb53pr01ql09hrbsp0d0jb53pr01ql09hrbspg',
             telegramBotToken: '7767613691:AAHogbBbDRVilKSUGx_YkVIYELKZNw74f_k',
-            telegramChatId: '6469981362',
+            telegramChatId: '-1002655764476',
             alertCooldown: 30000, // 30 seconds
             rsiPeriod: 14,
             emaPeriod: 9,
