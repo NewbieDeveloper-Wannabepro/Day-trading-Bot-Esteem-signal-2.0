@@ -17,9 +17,9 @@ Key Features:
 
 📱 Telegram Notifications
 
-📅 Signal History Tracking desktop)
+📅 Signal History Tracking (MOBILE, desktop)
 
 
-Additionally it features two options;
+Additionally, it features two options;
 
-Esteem 1.o and Esteem 2.0 the upgraded version
+Esteem 1 o and Esteem 2.0 are the upgraded versions
