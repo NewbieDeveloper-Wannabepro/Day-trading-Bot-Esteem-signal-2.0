@@ -7,7 +7,7 @@
             telegramChatId: '-1002655764476',
             alertCooldown: 30000, // 30 seconds
             rsiPeriod: 9,
-            emaPeriod: 9,
+            emaPeriod: 50,
             priceHistoryLength: 30
         };
 
@@ -180,7 +180,7 @@
             return 100 - (100 / (1 + rs));
         }
 
-        function calculateEMA(prices, period = 9) {
+        function calculateEMA(prices, period = 50) {
             const k = 2 / (period + 1);
             let ema = prices[0];
             
