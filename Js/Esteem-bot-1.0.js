@@ -199,7 +199,7 @@
             const pairName = state.currentPair.split(':')[1].replace('_', '/');
 
             // BUY Signal (Oversold + Price > EMA9)
-            if (rsi < 20 && price > ema9 && now - state.lastAlertTime > config.alertCooldown) {
+            if (rsi < 15 && price > ema9 && now - state.lastAlertTime > config.alertCooldown) {
                 const message = `🚀 BUY ${pairName} (asset)\nPrice: ${price.toFixed(5)}\nRSI: ${rsi.toFixed(2)}\nEMA9: ${ema9.toFixed(5)}`;
                 
                 elements.signal.textContent = "BUY (CALL) Signal Detected!";
@@ -210,7 +210,7 @@
                 state.lastAlertTime = now;
             }
             // SELL Signal (Overbought + Price < EMA9)
-            else if (rsi > 80 && price < ema9 && now - state.lastAlertTime > config.alertCooldown) {
+            else if (rsi > 85 && price < ema9 && now - state.lastAlertTime > config.alertCooldown) {
                 const message = `🔻 SELL ${pairName} (asset)\nPrice: ${price.toFixed(5)}\nRSI: ${rsi.toFixed(2)}\nEMA9: ${ema9.toFixed(5)}`;
                 
                 elements.signal.textContent = "SELL (PUT) Signal Detected!";
