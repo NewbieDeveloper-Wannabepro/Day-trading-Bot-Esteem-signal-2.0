@@ -6,7 +6,7 @@
             telegramBotToken: '7767613691:AAHogbBbDRVilKSUGx_YkVIYELKZNw74f_k',
             telegramChatId: '-1002655764476',
             alertCooldown: 30000, // 30 seconds
-            rsiPeriod: 9,
+            rsiPeriod: 14,
             emaPeriod: 50,
             priceHistoryLength: 30
         };
@@ -162,7 +162,7 @@
         // ======================
         // 7. TECHNICAL INDICATORS
         // ======================
-        function calculateRSI(prices, period = 9) {
+        function calculateRSI(prices, period = 14) {
             if (prices.length < period + 1) return 50;
             
             let gains = 0;
@@ -194,24 +194,24 @@
         // ======================
         // 8. SIGNAL GENERATION
         // ======================
-        function generateSignal(price, rsi, ema9) {
+        function generateSignal(price, rsi, ema50) {
             const now = Date.now();
             const pairName = state.currentPair.split(':')[1].replace('_', '/');
 
-            // BUY Signal (Oversold + Price > EMA9)
-            if (rsi < 15 && price > ema9 && now - state.lastAlertTime > config.alertCooldown) {
-                const message = `🚀 BUY ${pairName} (asset)\nPrice: ${price.toFixed(5)}\nRSI: ${rsi.toFixed(2)}\nEMA9: ${ema9.toFixed(5)}`;
+            // BUY Signal (Oversold + Price > EMA50)
+            if (rsi < 15 && price > ema50 && now - state.lastAlertTime > config.alertCooldown) {
+                const message = `🚀 BUY ${pairName} (asset)\nPrice: ${price.toFixed(5)}\nRSI: ${rsi.toFixed(2)}\nEMA9: ${ema50.toFixed(5)}`;
                 
                 elements.signal.textContent = "BUY (CALL) Signal Detected!";
                 elements.signal.style.color = "var(--buy-color)";
                 
                 sendTelegramAlert(message);
-                addSignalToHistory('buy', pairName, price, rsi, ema9);
+                addSignalToHistory('buy', pairName, price, rsi, ema50);
                 state.lastAlertTime = now;
             }
-            // SELL Signal (Overbought + Price < EMA9)
-            else if (rsi > 85 && price < ema9 && now - state.lastAlertTime > config.alertCooldown) {
-                const message = `🔻 SELL ${pairName} (asset)\nPrice: ${price.toFixed(5)}\nRSI: ${rsi.toFixed(2)}\nEMA9: ${ema9.toFixed(5)}`;
+            // SELL Signal (Overbought + Price < EMA50)
+            else if (rsi > 85 && price < ema50 && now - state.lastAlertTime > config.alertCooldown) {
+                const message = `🔻 SELL ${pairName} (asset)\nPrice: ${price.toFixed(5)}\nRSI: ${rsi.toFixed(2)}\nEMA9: ${ema50.toFixed(5)}`;
                 
                 elements.signal.textContent = "SELL (PUT) Signal Detected!";
                 elements.signal.style.color = "var(--sell-color)";
