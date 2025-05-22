@@ -194,24 +194,24 @@
         // ======================
         // 8. SIGNAL GENERATION
         // ======================
-        function generateSignal(price, rsi, ema50) {
+        function generateSignal(price, rsi, ema9) {
             const now = Date.now();
             const pairName = state.currentPair.split(':')[1].replace('_', '/');
 
             // BUY Signal (Oversold + Price > EMA50)
-            if (rsi < 15 && price > ema50 && now - state.lastAlertTime > config.alertCooldown) {
-                const message = `🚀 BUY ${pairName} (asset)\nPrice: ${price.toFixed(5)}\nRSI: ${rsi.toFixed(2)}\nEMA9: ${ema50.toFixed(5)}`;
+            if (rsi < 15 && price > ema9 && now - state.lastAlertTime > config.alertCooldown) {
+                const message = `🚀 BUY ${pairName} (asset)\nPrice: ${price.toFixed(5)}\nRSI: ${rsi.toFixed(2)}\nEMA9: ${ema9.toFixed(5)}`;
                 
                 elements.signal.textContent = "BUY (CALL) Signal Detected!";
                 elements.signal.style.color = "var(--buy-color)";
                 
                 sendTelegramAlert(message);
-                addSignalToHistory('buy', pairName, price, rsi, ema50);
+                addSignalToHistory('buy', pairName, price, rsi, ema9);
                 state.lastAlertTime = now;
             }
             // SELL Signal (Overbought + Price < EMA50)
-            else if (rsi > 85 && price < ema50 && now - state.lastAlertTime > config.alertCooldown) {
-                const message = `🔻 SELL ${pairName} (asset)\nPrice: ${price.toFixed(5)}\nRSI: ${rsi.toFixed(2)}\nEMA9: ${ema50.toFixed(5)}`;
+            else if (rsi > 85 && price < ema0 && now - state.lastAlertTime > config.alertCooldown) {
+                const message = `🔻 SELL ${pairName} (asset)\nPrice: ${price.toFixed(5)}\nRSI: ${rsi.toFixed(2)}\nEMA9: ${ema9.toFixed(5)}`;
                 
                 elements.signal.textContent = "SELL (PUT) Signal Detected!";
                 elements.signal.style.color = "var(--sell-color)";
