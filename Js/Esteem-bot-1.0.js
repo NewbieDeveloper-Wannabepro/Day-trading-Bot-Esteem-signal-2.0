@@ -210,7 +210,7 @@
                 state.lastAlertTime = now;
             }
             // SELL Signal (Overbought + Price < EMA50)
-            else if (rsi > 85 && price < ema0 && now - state.lastAlertTime > config.alertCooldown) {
+            else if (rsi > 85 && price < ema9 && now - state.lastAlertTime > config.alertCooldown) {
                 const message = `🔻 SELL ${pairName} (asset)\nPrice: ${price.toFixed(5)}\nRSI: ${rsi.toFixed(2)}\nEMA9: ${ema9.toFixed(5)}`;
                 
                 elements.signal.textContent = "SELL (PUT) Signal Detected!";
